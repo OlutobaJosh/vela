@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Menlo', monospace;
+
+  --bg:        #09090b;
+  --bg-2:      #0f0f12;
+  --surface:   #18181b;
+  --surface-2: #1e1e22;
+  --border:    rgba(255,255,255,0.06);
+  --border-2:  #27272a;
+  --text:      #fafafa;
+  --text-2:    #a1a1aa;
+  --text-3:    #71717a;
+  --accent:    #6366f1;
+  --accent-2:  #4f46e5;
+  --accent-glow: rgba(99,102,241,0.15);
+  --green:     #22c55e;
+  --red:       #ef4444;
+  --yellow:    #eab308;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+}
+
+/* Monospace for all numbers */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+
+/* Focus */
+*:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* Selection */
+::selection { background: var(--accent); color: white; }
+
+/* ── Utility classes ── */
+.surface {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Status badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
+}
+.badge-completed { background: rgba(34,197,94,0.1);  color: #4ade80; }
+.badge-pending   { background: rgba(234,179,8,0.1);  color: #facc15; }
+.badge-refunded  { background: rgba(99,102,241,0.1); color: #818cf8; }
+.badge-cancelled { background: rgba(239,68,68,0.1);  color: #f87171; }
+
+/* Input */
+.field {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: 7px;
+  color: var(--text);
+  font-size: 0.875rem;
+  font-family: var(--font-inter);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field::placeholder { color: var(--text-3); }
+.field:focus { border-color: var(--accent); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  font-family: var(--font-inter);
+}
+.btn-accent {
+  background: var(--accent);
+  color: white;
+}
+.btn-accent:hover { background: var(--accent-2); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border: 1px solid var(--border-2);
+}
+.btn-ghost:hover { background: var(--surface); color: var(--text); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Trend indicator */
+.trend-up   { color: var(--green); }
+.trend-down { color: var(--red); }
+
+/* Animations */
+@keyframes fadeIn  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: translateY(0) } }
+.anim-fade { animation: fadeIn  0.3s ease both; }
+.anim-up   { animation: slideUp 0.4s ease both; }
+
+/* Recharts overrides */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line { stroke: rgba(255,255,255,0.04); }
+.recharts-tooltip-wrapper { outline: none; }
+
+/* Sidebar active */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 0.825rem;
+  font-weight: 500;
+  color: var(--text-3);
+  transition: all 0.15s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--surface-2); color: var(--text-2); }
+.nav-item.active { background: var(--accent-glow); color: var(--accent); }
+.nav-item.active svg { color: var(--accent); }
