@@ -13,8 +13,8 @@ export function createClient(){
         },
         setAll(cookiesToSet: {
           try {
-           cookiesToSet.forEach(({ name, value, options }) => 
-              CookieStore.set(name, value, options)
+           cookiesToSet.forEach((cookie) => 
+              CookieStore.set(cookie.name, cookie.value, cookie.options)
             );
           } catch {}
         },
