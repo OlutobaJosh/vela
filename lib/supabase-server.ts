@@ -1,24 +1,43 @@
 import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/headers';
 
-export function createClient() {
-  const cookieStore = cookies();
-  return createServerClient(
+export async function middleware(req: NextRequest) {
+  let res = NextResponse.next({request: req});
+ 
+  const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() { 
-          return cookieStore.getAll(); 
+          return req.cookies.getAll(); 
         },
         setAll(cookiesToSet: { name: string; value: string; options?: any }[]) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
+            cookiesToSet.forEach(({ name, value, }) =>
+              req.cookies.set(name, value)
             );
-          } catch {}
+            res = NextResponse.next({request: req});
+            cookiesToSet.forEach(({ name, value, options }) =>
+              res.cookies.set(name, value, options)
+            );
+          } 
         },
       },
-    }
   );
+
+const { data: { user } } = await supabase.auth.getUser();
+
+  if (req.nextUrl.pathname.startsWith('/dashboard') && !user) {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  if ((req.nextUrl.pathname === '/login' || req.nextUrl.pathname === '/register') && user) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
+  }
+
+  return res;
 }
+
+export const config = {
+  matcher: ['/dashboard/:path*', '/login', '/register'],
+};
