@@ -98,35 +98,37 @@ export default function LandingPage() {
           </div>
 
           {/* Dashboard preview mockup */}
-          <div className="surface mx-auto text-left overflow-hidden" style={{ maxWidth: '860px', background: 'var(--surface)' }}>
+          <div className="surface mx-auto text-left overflow-hidden w-full" style={{ maxWidth: '860px', background: 'var(--surface)' }}>
             {/* Fake top bar */}
-            <div className="flex items-center gap-2 px-4 py-3" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-2)' }}>
+            <div className="flex items-center gap-2 px-3 py-2.5" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-2)' }}>
               <div className="flex gap-1.5">
-                {['#ef4444','#eab308','#22c55e'].map(c => <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c, opacity: 0.7 }} />)}
+                {['#ef4444','#eab308','#22c55e'].map(c => <div key={c} className="w-2 h-2 rounded-full" style={{ background: c, opacity: 0.7 }} />)}
               </div>
-              <div className="flex-1 h-5 rounded mx-4" style={{ background: 'var(--border-2)', maxWidth: '180px' }} />
+              <div className="flex-1 h-4 rounded mx-2" style={{ background: 'var(--border-2)', maxWidth: '140px' }} />
             </div>
-            {/* Fake dashboard grid */}
-            <div className="p-4 grid grid-cols-4 gap-3">
+
+            {/* KPI cards — 2 cols on mobile, 4 on desktop */}
+            <div className="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
               {[
-                { label: 'Revenue', val: '$48,291', trend: '+12.4%', up: true },
-                { label: 'Orders',  val: '1,847',   trend: '+8.1%',  up: true },
-                { label: 'Customers', val: '924',   trend: '+5.3%',  up: true },
-                { label: 'Conv. Rate', val: '3.24%', trend: '-0.2%', up: false },
+                { label: 'Revenue',   val: '$48,291', trend: '+12.4%', up: true  },
+                { label: 'Orders',    val: '1,847',   trend: '+8.1%',  up: true  },
+                { label: 'Customers', val: '924',     trend: '+5.3%',  up: true  },
+                { label: 'Conv. Rate',val: '3.24%',   trend: '-0.2%',  up: false },
               ].map(s => (
-                <div key={s.label} className="p-3 rounded-lg" style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}>
-                  <p className="label mb-2">{s.label}</p>
-                  <p className="num font-medium" style={{ fontSize: '1.1rem', color: 'var(--text)' }}>{s.val}</p>
-                  <p className={`text-xs num mt-1 ${s.up ? 'trend-up' : 'trend-down'}`}>{s.trend}</p>
+                <div key={s.label} className="p-2.5 rounded-lg" style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}>
+                  <p className="label mb-1.5" style={{ fontSize: '0.6rem' }}>{s.label}</p>
+                  <p className="num font-semibold" style={{ fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)', color: 'var(--text)' }}>{s.val}</p>
+                  <p className={`num mt-1 ${s.up ? 'trend-up' : 'trend-down'}`} style={{ fontSize: '0.65rem' }}>{s.trend}</p>
                 </div>
               ))}
             </div>
-            {/* Fake chart */}
-            <div className="px-4 pb-4">
-              <div className="rounded-lg p-3" style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', height: '100px' }}>
-                <div className="flex items-end gap-1 h-full pb-2">
+
+            {/* Fake chart — hidden on very small screens */}
+            <div className="px-3 pb-3">
+              <div className="rounded-lg p-2" style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', height: '80px' }}>
+                <div className="flex items-end gap-px h-full pb-1">
                   {[40,55,35,70,60,80,50,75,65,90,72,85,60,95,78,88,70,92,68,85,72,90,80,95,75,88,92,98,85,90].map((h, i) => (
-                    <div key={i} className="flex-1 rounded-sm transition-all" style={{ height: `${h}%`, background: i === 29 ? 'var(--accent)' : 'rgba(99,102,241,0.25)' }} />
+                    <div key={i} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: i === 29 ? 'var(--accent)' : 'rgba(99,102,241,0.25)', minWidth: '2px' }} />
                   ))}
                 </div>
               </div>
