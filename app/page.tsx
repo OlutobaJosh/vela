@@ -39,6 +39,42 @@ const PRICING = [
   },
 ];
 
+// ── Static data for the dashboard mockup ──────────────────────────────────────
+
+const KPI_CARDS = [
+  { label: 'Revenue',    val: '$48,291', trend: '+12.4%', up: true,  sub: 'vs $43k last mo.',  spark: [55,60,52,70,68,75,72,80,78,88,85,90] },
+  { label: 'Orders',     val: '1,847',   trend: '+8.1%',  up: true,  sub: '1,708 last month',  spark: [50,55,48,62,65,70,68,72,75,80,82,85] },
+  { label: 'Customers',  val: '924',     trend: '+5.3%',  up: true,  sub: '877 last month',    spark: [60,62,58,65,63,68,70,72,68,75,78,80] },
+  { label: 'Conv. Rate', val: '3.24%',   trend: '−0.2%',  up: false, sub: '3.44% last month',  spark: [70,68,72,66,65,62,63,60,64,58,56,55] },
+];
+
+const BAR_DATA = [40,55,35,70,60,80,50,75,65,90,72,85,60,95,78,88,70,92,68,85,72,90,80,95,75,88,92,98,85,90];
+
+// Sidebar icon paths (16×16 viewBox)
+const SIDEBAR_ICONS = [
+  'M3 3h4v4H3zm6 0h4v4H9zM3 9h4v4H3zm6 0h4v4H9z',            // grid / home
+  'M2 12V8h2v4zm4-6v10H8V6zm4 2v8h2V8z',                       // bar chart
+  'M7 2a2.5 2.5 0 0 1 2.5 2.5h-5A2.5 2.5 0 0 1 7 2zm4 2.5H3L2 13h10z', // bag
+  'M7 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm-4 6a4 4 0 0 1 8 0H3z',  // person
+];
+
+// Pure helper – computes polyline `points` string from sparkline data
+function sparkPoints(data: number[]): string {
+  const W = 52, H = 24;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = max - min || 1;
+  return data
+    .map((v, i) => {
+      const x = (i / (data.length - 1)) * W;
+      const y = H - ((v - min) / range) * (H - 4) - 2;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(' ');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function LandingPage() {
   return (
     <div style={{ background: 'var(--bg)', minHeight: '100vh' }}>
@@ -97,43 +133,250 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          {/* Dashboard preview mockup */}
-          <div className="surface mx-auto text-left overflow-hidden w-full" style={{ maxWidth: '860px', background: 'var(--surface)' }}>
-            {/* Fake top bar */}
-            <div className="flex items-center gap-2 px-3 py-2.5" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-2)' }}>
-              <div className="flex gap-1.5">
-                {['#ef4444','#eab308','#22c55e'].map(c => <div key={c} className="w-2 h-2 rounded-full" style={{ background: c, opacity: 0.7 }} />)}
+          {/* ── DASHBOARD PREVIEW MOCKUP ── */}
+          <div
+            className="mx-auto text-left w-full relative overflow-hidden"
+            style={{
+              maxWidth: '860px',
+              borderRadius: '12px',
+              border: '1px solid rgba(99,102,241,0.3)',
+              boxShadow: '0 0 0 1px rgba(99,102,241,0.06), 0 28px 80px -16px rgba(0,0,0,0.85)',
+              background: 'var(--surface)',
+            }}
+          >
+            {/* Window chrome */}
+            <div
+              className="flex items-center gap-3 px-4 py-2.5"
+              style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-2)' }}
+            >
+              {/* Traffic lights */}
+              <div className="flex gap-1.5 shrink-0">
+                {['#ef4444','#eab308','#22c55e'].map(c => (
+                  <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c, opacity: 0.85 }} />
+                ))}
               </div>
-              <div className="flex-1 h-4 rounded mx-2" style={{ background: 'var(--border-2)', maxWidth: '140px' }} />
+              {/* URL bar */}
+              <div className="flex flex-1 justify-center">
+                <div
+                  className="flex items-center gap-1.5 px-2.5 rounded-md"
+                  style={{
+                    height: '22px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid var(--border)',
+                    maxWidth: '210px',
+                    width: '100%',
+                  }}
+                >
+                  <svg viewBox="0 0 14 14" width="9" height="9" fill="none">
+                    <circle cx="7" cy="7" r="5.5" stroke="rgba(255,255,255,0.22)" strokeWidth="1"/>
+                    <path d="M4.5 7a5.5 5.5 0 0 0 5 0M7 1.5v11M1.5 7h11" stroke="rgba(255,255,255,0.22)" strokeWidth="0.9"/>
+                  </svg>
+                  <span style={{ fontSize: '0.55rem', color: 'var(--text-3)', letterSpacing: '0.01em' }}>
+                    app.vela.io/dashboard
+                  </span>
+                </div>
+              </div>
+              <div className="w-12 shrink-0" />
             </div>
 
-            {/* KPI cards — 2 cols on mobile, 4 on desktop */}
-            <div className="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
-              {[
-                { label: 'Revenue',   val: '$48,291', trend: '+12.4%', up: true  },
-                { label: 'Orders',    val: '1,847',   trend: '+8.1%',  up: true  },
-                { label: 'Customers', val: '924',     trend: '+5.3%',  up: true  },
-                { label: 'Conv. Rate',val: '3.24%',   trend: '-0.2%',  up: false },
-              ].map(s => (
-                <div key={s.label} className="p-2.5 rounded-lg" style={{ background: 'var(--surface-2)', border: '1px solid var(--border)' }}>
-                  <p className="label mb-1.5" style={{ fontSize: '0.6rem' }}>{s.label}</p>
-                  <p className="num font-semibold" style={{ fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)', color: 'var(--text)' }}>{s.val}</p>
-                  <p className={`num mt-1 ${s.up ? 'trend-up' : 'trend-down'}`} style={{ fontSize: '0.65rem' }}>{s.trend}</p>
-                </div>
-              ))}
-            </div>
+            {/* Body: sidebar + main */}
+            <div className="flex">
 
-            {/* Fake chart — hidden on very small screens */}
-            <div className="px-3 pb-3">
-              <div className="rounded-lg p-2" style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', height: '80px' }}>
-                <div className="flex items-end gap-px h-full pb-1">
-                  {[40,55,35,70,60,80,50,75,65,90,72,85,60,95,78,88,70,92,68,85,72,90,80,95,75,88,92,98,85,90].map((h, i) => (
-                    <div key={i} className="flex-1 rounded-sm" style={{ height: `${h}%`, background: i === 29 ? 'var(--accent)' : 'rgba(99,102,241,0.25)', minWidth: '2px' }} />
-                  ))}
+              {/* Icon sidebar — sm+ only */}
+              <div
+                className="hidden sm:flex flex-col items-center gap-1.5 py-3 px-1.5 shrink-0"
+                style={{ width: '44px', borderRight: '1px solid var(--border)', background: 'rgba(0,0,0,0.18)' }}
+              >
+                {SIDEBAR_ICONS.map((d, i) => (
+                  <div
+                    key={i}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{
+                      background: i === 0 ? 'rgba(99,102,241,0.15)' : 'transparent',
+                      border: i === 0 ? '1px solid rgba(99,102,241,0.25)' : '1px solid transparent',
+                    }}
+                  >
+                    <svg viewBox="0 0 16 16" width="13" height="13">
+                      <path d={d} fill={i === 0 ? 'var(--accent)' : 'rgba(255,255,255,0.22)'} />
+                    </svg>
+                  </div>
+                ))}
+              </div>
+
+              {/* Main content area */}
+              <div className="flex-1 p-3 flex flex-col gap-2.5 min-w-0">
+
+                {/* Dashboard header row */}
+                <div className="flex items-center justify-between gap-2">
+                  <div>
+                    <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.01em' }}>
+                      Overview
+                    </p>
+                    <p style={{ fontSize: '0.5rem', color: 'var(--text-3)', marginTop: '1px' }}>
+                      Last 30 days · updated just now
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <div
+                      className="flex items-center px-2 rounded"
+                      style={{ height: '20px', background: 'var(--surface-2)', border: '1px solid var(--border)', fontSize: '0.48rem', color: 'var(--text-3)' }}
+                    >
+                      Jun 1 – Jun 30
+                    </div>
+                    <div
+                      className="flex items-center px-2 rounded"
+                      style={{ height: '20px', background: 'var(--accent)', fontSize: '0.48rem', color: 'white', fontWeight: 700 }}
+                    >
+                      Export
+                    </div>
+                  </div>
                 </div>
+
+                {/* KPI Cards — 2 cols mobile, 4 cols sm+ */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {KPI_CARDS.map(s => {
+                    const pts    = sparkPoints(s.spark);
+                    const fillPts = `0,26 ${pts} 52,26`;
+                    const gradId  = `sg${s.label.replace(/[^a-zA-Z]/g, '')}`;
+                    const color   = s.up ? '#22c55e' : '#ef4444';
+                    const badgeBg = s.up ? 'rgba(34,197,94,0.1)'  : 'rgba(239,68,68,0.1)';
+                    const badgeBd = s.up ? 'rgba(34,197,94,0.22)' : 'rgba(239,68,68,0.22)';
+                    return (
+                      <div
+                        key={s.label}
+                        className="rounded-lg relative overflow-hidden"
+                        style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', padding: '10px 10px 8px' }}
+                      >
+                        {/* Label + trend badge */}
+                        <div className="flex items-start justify-between gap-1 mb-2">
+                          <p style={{ fontSize: '0.5rem', fontWeight: 600, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--text-3)', lineHeight: 1 }}>
+                            {s.label}
+                          </p>
+                          <span style={{
+                            fontSize: '0.47rem', padding: '1.5px 4px', borderRadius: '4px',
+                            fontWeight: 700, whiteSpace: 'nowrap',
+                            background: badgeBg, color, border: `1px solid ${badgeBd}`,
+                          }}>
+                            {s.trend}
+                          </span>
+                        </div>
+                        {/* Value */}
+                        <p style={{
+                          fontSize: 'clamp(0.8rem, 2vw, 1.05rem)',
+                          fontWeight: 800, color: 'var(--text)',
+                          letterSpacing: '-0.03em', lineHeight: 1, marginBottom: '4px',
+                        }}>
+                          {s.val}
+                        </p>
+                        {/* Sub-label */}
+                        <p style={{ fontSize: '0.45rem', color: 'var(--text-3)' }}>{s.sub}</p>
+
+                        {/* Sparkline — bottom-right corner */}
+                        <div style={{ position: 'absolute', bottom: 0, right: 0, width: '52px', height: '26px', opacity: 0.45 }}>
+                          <svg viewBox="0 0 52 26" preserveAspectRatio="none" width="52" height="26">
+                            <defs>
+                              <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%"   stopColor={color} stopOpacity="0.28"/>
+                                <stop offset="100%" stopColor={color} stopOpacity="0"/>
+                              </linearGradient>
+                            </defs>
+                            <polygon points={fillPts} fill={`url(#${gradId})`} />
+                            <polyline
+                              points={pts}
+                              fill="none"
+                              stroke={color}
+                              strokeWidth="1.5"
+                              strokeLinejoin="round"
+                              strokeLinecap="round"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Revenue chart */}
+                <div className="rounded-lg overflow-hidden" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)' }}>
+
+                  {/* Chart header */}
+                  <div
+                    className="flex items-center justify-between px-3 py-2"
+                    style={{ borderBottom: '1px solid var(--border)' }}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'var(--accent)' }} />
+                      <p style={{ fontSize: '0.58rem', fontWeight: 600, color: 'var(--text)' }}>Revenue over time</p>
+                    </div>
+                    <div className="flex gap-0.5">
+                      {['7D','30D','90D'].map((t, i) => (
+                        <span
+                          key={t}
+                          style={{
+                            fontSize: '0.47rem', padding: '1.5px 5px', borderRadius: '3px',
+                            background: i === 1 ? 'var(--accent)' : 'transparent',
+                            color: i === 1 ? 'white' : 'var(--text-3)',
+                            fontWeight: i === 1 ? 700 : 400,
+                          }}
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Chart body */}
+                  <div className="px-3 pt-2 pb-2.5">
+                    <div className="flex gap-1.5" style={{ height: '68px' }}>
+                      {/* Y-axis labels */}
+                      <div className="flex flex-col justify-between shrink-0" style={{ width: '22px' }}>
+                        {['$80k', '$40k', '$0'].map(l => (
+                          <span key={l} style={{ fontSize: '0.37rem', color: 'var(--text-3)', textAlign: 'right', display: 'block' }}>
+                            {l}
+                          </span>
+                        ))}
+                      </div>
+                      {/* Bars */}
+                      <div className="flex items-end gap-px flex-1">
+                        {BAR_DATA.map((h, i) => (
+                          <div
+                            key={i}
+                            className="flex-1 rounded-sm"
+                            style={{
+                              height: `${h}%`,
+                              background: i === BAR_DATA.length - 1
+                                ? 'var(--accent)'
+                                : `rgba(99,102,241,${(0.12 + (h / 100) * 0.38).toFixed(2)})`,
+                              minWidth: '2px',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    {/* X-axis labels */}
+                    <div className="flex justify-between mt-1" style={{ paddingLeft: '26px' }}>
+                      {['Jun 1','Jun 9','Jun 17','Jun 24','Jun 30'].map(l => (
+                        <span key={l} style={{ fontSize: '0.37rem', color: 'var(--text-3)' }}>{l}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
+
+            {/* Bottom fade — implies more content below */}
+            <div
+              style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0,
+                height: '30px',
+                background: 'linear-gradient(to top, var(--surface), transparent)',
+                pointerEvents: 'none',
+              }}
+            />
           </div>
+          {/* ── END DASHBOARD PREVIEW ── */}
+
         </div>
       </section>
 
@@ -212,6 +455,7 @@ export default function LandingPage() {
           <p className="text-xs" style={{ color: 'var(--text-3)' }}>© {new Date().getFullYear()} Vela Analytics. All rights reserved.</p>
         </div>
       </footer>
+
     </div>
   );
 }
