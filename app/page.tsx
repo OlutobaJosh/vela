@@ -155,8 +155,8 @@ export default function LandingPage() {
                   <div key={c} className="w-2.5 h-2.5 rounded-full" style={{ background: c, opacity: 0.85 }} />
                 ))}
               </div>
-              {/* URL bar */}
-              <div className="flex flex-1 justify-center">
+              {/* URL bar — hidden on mobile */}
+              <div className="hidden sm:flex flex-1 justify-center">
                 <div
                   className="flex items-center gap-1.5 px-2.5 rounded-md"
                   style={{
@@ -172,11 +172,11 @@ export default function LandingPage() {
                     <path d="M4.5 7a5.5 5.5 0 0 0 5 0M7 1.5v11M1.5 7h11" stroke="rgba(255,255,255,0.22)" strokeWidth="0.9"/>
                   </svg>
                   <span style={{ fontSize: '0.55rem', color: 'var(--text-3)', letterSpacing: '0.01em' }}>
-                    app.vela.io/dashboard
+                    vela-u7sa.onrender.com
                   </span>
                 </div>
               </div>
-              <div className="w-12 shrink-0" />
+              <div className="hidden sm:block w-12 shrink-0" />
             </div>
 
             {/* Body: sidebar + main */}
@@ -216,7 +216,7 @@ export default function LandingPage() {
                       Last 30 days · updated just now
                     </p>
                   </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
+                  <div className="hidden sm:flex items-center gap-1.5 shrink-0">
                     <div
                       className="flex items-center px-2 rounded"
                       style={{ height: '20px', background: 'var(--surface-2)', border: '1px solid var(--border)', fontSize: '0.48rem', color: 'var(--text-3)' }}
@@ -262,7 +262,7 @@ export default function LandingPage() {
                         </div>
                         {/* Value */}
                         <p style={{
-                          fontSize: 'clamp(0.8rem, 2vw, 1.05rem)',
+                          fontSize: 'clamp(0.85rem, 3.5vw, 1.05rem)',
                           fontWeight: 800, color: 'var(--text)',
                           letterSpacing: '-0.03em', lineHeight: 1, marginBottom: '4px',
                         }}>
@@ -328,8 +328,8 @@ export default function LandingPage() {
                   {/* Chart body */}
                   <div className="px-3 pt-2 pb-2.5">
                     <div className="flex gap-1.5" style={{ height: '68px' }}>
-                      {/* Y-axis labels */}
-                      <div className="flex flex-col justify-between shrink-0" style={{ width: '22px' }}>
+                      {/* Y-axis labels — hidden on mobile */}
+                      <div className="hidden sm:flex flex-col justify-between shrink-0" style={{ width: '22px' }}>
                         {['$80k', '$40k', '$0'].map(l => (
                           <span key={l} style={{ fontSize: '0.37rem', color: 'var(--text-3)', textAlign: 'right', display: 'block' }}>
                             {l}
@@ -354,7 +354,7 @@ export default function LandingPage() {
                       </div>
                     </div>
                     {/* X-axis labels */}
-                    <div className="flex justify-between mt-1" style={{ paddingLeft: '26px' }}>
+                    <div className="flex justify-between mt-1 sm:pl-6">
                       {['Jun 1','Jun 9','Jun 17','Jun 24','Jun 30'].map(l => (
                         <span key={l} style={{ fontSize: '0.37rem', color: 'var(--text-3)' }}>{l}</span>
                       ))}
