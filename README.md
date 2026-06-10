@@ -56,7 +56,7 @@ Open http://localhost:3000
 
 ---
 
-## Deploy to Render
+## Deploy to Render/Vercel
 
 1. Push to GitHub
 2. Render → New Web Service → connect repo

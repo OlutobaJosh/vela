@@ -172,7 +172,7 @@ export default function LandingPage() {
                     <path d="M4.5 7a5.5 5.5 0 0 0 5 0M7 1.5v11M1.5 7h11" stroke="rgba(255,255,255,0.22)" strokeWidth="0.9"/>
                   </svg>
                   <span style={{ fontSize: '0.55rem', color: 'var(--text-3)', letterSpacing: '0.01em' }}>
-                    vela-u7sa.onrender.com
+                    https://vela-sepia.vercel.app/.com
                   </span>
                 </div>
               </div>
